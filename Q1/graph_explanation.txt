@@ -1,0 +1,4 @@
+Use of Force Atlas and Noverlap algorithms
+Show node labels after filtering data by degree range
+Rank nodes by size in order to easily convey information
+Calculate modularity and apply its class for community detection

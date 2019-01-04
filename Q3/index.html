@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>okaitezidis3</title>
+        <script type="text/javascript" src="./d3/d3.v3.min.js"></script>
+        <style type="text/css">
+        .axis path,
+        .axis line {
+        fill: none;
+        stroke: black;
+        shape-rendering: crispEdges;
+        }
+    </style>
+    </head>
+    <body>
+        <h1>ORESTIS KAITEZIDIS</h1>
+        <div id="name_id"></div>
+        <script type="text/javascript">
+
+
+
+
+          function getRandomIntInclusive(min, max) {
+          // Function that returns a Random Integers that is inclusive between the Minimum and the Maximum
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min + 1)) + min; //The maximum is inclusive and the minimum is inclusive
+          }
+          //Reference https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
+
+          function random_points_x_coordinates(numb_points, max_value,min_value) {
+            //Function that returns a Dataset Filled with numb_points between [min_value,max_value]
+            var dataset = [];
+            for (var i = 0; i < numb_points; i++) {
+            dataset.push([getRandomIntInclusive(min_value,max_value), getRandomIntInclusive(min_value,max_value)]);
+            }
+            return dataset;
+          }
+
+
+
+
+
+        // Width, Height, Margin
+        var w = 500;
+        var h = 500;
+        var margin = 40;
+        numb_points = 60
+
+
+        dataset = random_points_x_coordinates(numb_points,100,0); //call the dataset with 60 points between [0,100]
+
+        //split the dataset from the randomly generated points to Triangles and Crosses
+        var dataset_triangles = dataset.slice(0,numb_points/2)
+        var dataset_crosses   = dataset.slice(numb_points/2, numb_points)
+
+
+        //xScale, Yscale, Rscale
+        var xScale = d3.scale.linear()
+                       .domain([0, d3.max(dataset, function(d) { return d[0]; })])
+                       .range([margin, w - margin * 2]);
+
+        var yScale = d3.scale.linear()
+                     .domain([0, d3.max(dataset, function(d) { return d[1]; })])
+                     .range([h - margin, margin]);
+
+        var rScale = d3.scale.linear()
+                    .domain([0, d3.max(dataset, function(d) { return d[0]; })])
+                    .range([5, 50]);
+
+        //X axis
+        var xAxis = d3.svg.axis()
+                .scale(xScale)
+                .orient("bottom")
+                .ticks(5);
+
+        //Y axis
+        var yAxis = d3.svg.axis()
+                .scale(yScale)
+                .orient("left")
+                .ticks(5);
+
+        //SVG creation with w,h
+        var svg = d3.select("#name_id")
+                .append("svg")
+                .attr("width", w)
+                .attr("height", h);
+
+
+         //Create triangles
+         var triang = d3.svg.symbol().type('triangle-up')
+              .size(function(d){return rScale(d[0]);})
+
+
+         svg.selectAll(".point")
+              .data(dataset_triangles)
+              .enter()
+              .append("path")
+              .attr("d",triang)
+              .attr("transform",function(d){
+                    return "translate("+xScale(d[0])+","+yScale(d[1])+")";
+                    })
+              .attr('fill',function(d){
+                  if (rScale(d[0])>rScale(d3.mean(dataset,function(d){return d[0];})))
+                  {
+                    return "blue"
+                  }
+                  else return "green"})
+
+
+
+
+
+
+         //Create Crosses
+         var cross = d3.svg.symbol().type('cross')
+              .size(function(d){return rScale(d[0]);})
+
+
+         svg.selectAll(".point")
+              .data(dataset_crosses)
+              .enter()
+              .append("path")
+              .attr("d",cross)
+              .attr("transform",function(d){
+                    return "translate("+xScale(d[0])+","+yScale(d[1])+")";
+                    })
+              .attr('fill',function(d){
+                  if (rScale(d[0])>rScale(d3.mean(dataset,function(d){return d[0];})))
+                  {
+                    return "blue"
+                  }
+                  else return "green"})
+
+
+        //Create X axis
+        svg.append("g")
+           .attr("class", "axis") //Assign "axis" class
+           .attr("transform", "translate(0," + (h - margin) + ")")
+           .call(xAxis);
+
+        //Create Y axis
+        svg.append("g")
+           .attr("class", "axis") //Assign "axis" class
+           .attr("transform", "translate(" + margin + ",0)")
+           .call(yAxis);
+
+// Referance: Scott Murray Interactive Vizualization for the Web
+
+
+        </script>
+    </body>
+</html>

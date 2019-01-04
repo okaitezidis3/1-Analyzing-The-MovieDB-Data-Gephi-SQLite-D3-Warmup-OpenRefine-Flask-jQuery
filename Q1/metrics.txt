@@ -1,0 +1,7 @@
+Average node degree: 1.516
+Diameter of the graph: 10
+Average path length: 2.843
+
+An intuitive meaning of the average degree of a node would be the average number of edges that are connected on a node in the graph.
+The diameter of the graph would be the longest length (measuring the shortest path) between all node pairs in the network.
+A meaning for the average path length would be the average shortest path length for all possible pair of nodes in the graph. It is a measure that helps the reader to understand what is the proximity between nodes.
